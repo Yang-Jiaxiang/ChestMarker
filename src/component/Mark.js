@@ -27,13 +27,12 @@ const Mark = ({
         width: azimut.Size * pxToMM + "px",
         height: azimut.Size * pxToMM + "px",
     };
-    const rightClick = (event) => {
-        event.preventDefault();
+    const handClick = (event) => {
         EditModalOpen();
         setOnEditMark({ side: side, index: index });
     };
     return (
-        <div id="circle" style={circleStyle} onContextMenu={rightClick}>
+        <div id="circle" style={circleStyle} onClick={handClick}>
             <font style={{ fontSize: "5px" }}>{index}</font>
         </div>
     );

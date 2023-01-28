@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 
-import { Box, Grid, ListItem, List, ListItemText } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 
-import Main from "./Main";
-import MarkEdit from "./MarkEdit";
+import Main from "./component/Main";
+import MarkEdit from "./component/MarkEdit";
 
 function App() {
     const [azimut, setAzimut] = useState({

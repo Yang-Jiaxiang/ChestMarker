@@ -5,7 +5,7 @@ import {
     calculatevHour,
     calcAngleDegrees,
     PythagoreanTheorem,
-} from "./js/calculate";
+} from "../js/calculate";
 const MarkEdit = ({
     open,
     azimut,
@@ -25,10 +25,6 @@ const MarkEdit = ({
         boxShadow: 24,
         p: 4,
     };
-
-    useEffect(() => {
-        console.log(onEditMark);
-    }, [onEditMark]);
 
     const handleDelete = () => {
         let tempAzimut = azimut;

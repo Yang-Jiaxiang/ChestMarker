@@ -6,7 +6,7 @@ import {
     calculatevHour,
     calcAngleDegrees,
     PythagoreanTheorem,
-} from "./js/calculate";
+} from "../js/calculate";
 const Main = ({ side, EditModalOpen, azimut, setAzimut, setOnEditMark }) => {
     //胸部最大直徑
     const ChestMaxSize = 200;
@@ -34,8 +34,7 @@ const Main = ({ side, EditModalOpen, azimut, setAzimut, setOnEditMark }) => {
             "px",
     };
 
-    const rightClick = (event) => {
-        event.preventDefault();
+    const handClick = (event) => {
         var Azimut = {
             x: (event.nativeEvent.pageX - ClockRef.current.offsetLeft) / pxToMM,
             y: (event.nativeEvent.pageY - ClockRef.current.offsetTop) / pxToMM,
@@ -52,7 +51,7 @@ const Main = ({ side, EditModalOpen, azimut, setAzimut, setOnEditMark }) => {
                 id="container"
                 style={containerStyle}
                 ref={ClockRef}
-                onContextMenu={rightClick}
+                onClick={handClick}
             >
                 {[1, 2, 3, 4, 5, 6].map((item) => {
                     return PageRef.current ? (
@@ -87,7 +86,6 @@ const Main = ({ side, EditModalOpen, azimut, setAzimut, setOnEditMark }) => {
                 <ul>
                     {azimut[side].length > 0
                         ? azimut[side].map((item, index) => {
-                              console.log(item);
                               return <li key={index}>{listText(item)}</li>;
                           })
                         : null}
