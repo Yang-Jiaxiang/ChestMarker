@@ -5,34 +5,28 @@ import { Box, Typography, Slider, Input, Grid } from "@mui/material";
 import Line from "./Line";
 
 function App() {
-    const [azimut, setAzimut] = useState([
-        {
-            Azimut: {
-                x: 0,
-                y: 0,
-            },
-            Size: 10,
+    const [azimut, setAzimut] = useState({
+        Azimut: {
+            x: 0,
+            y: 0,
         },
-    ]);
-
-    const [onClickCircle, setOnClickCircle] = useState(0);
+        Size: 10,
+    });
+    console.log(azimut);
 
     //設定胸部大小
-    const ChestMaxSize = 200;
+    const ChestMaxSize = 200; 
     const PageRef = useRef(null);
     const ClockRef = useRef(null);
     // 一釐米多少px
     const [pxToMM, setPxToMM] = useState(0);
-
-    //預設標記樣式
-    const presetCircleStyle = {
+    //點點的樣式
+    const [circleStyle, setCircleStyle] = useState({
         border: "1px solid black",
         position: "absolute",
         borderRadius: "50%",
-    };
-    //點點的樣式
-    const [circleStyle, setCircleStyle] = useState([]);
-
+        backgroundColor: "red",
+    });
     // 計算一釐米多少px
     useEffect(() => {
         if (PageRef.current) {
@@ -41,20 +35,26 @@ function App() {
     }, []);
 
     useEffect(() => {
-        var tempArray = [];
-        azimut.map((item, index) => {
-            tempArray.push({
-                ...presetCircleStyle,
-                backgroundColor: "red",
-                top: item.Azimut.y * pxToMM - (item.Size * pxToMM) / 2 + "px",
-                left: item.Azimut.x * pxToMM - (item.Size * pxToMM) / 2 + "px",
-                width: item.Size * pxToMM + "px",
-                height: item.Size * pxToMM + "px",
-            });
-        });
-
-        setCircleStyle(tempArray);
+        setCircleStyle((circleStyle) => ({
+            ...circleStyle,
+            top: azimut.Azimut.y * pxToMM - (azimut.Size * pxToMM) / 2 + "px",
+            left: azimut.Azimut.x * pxToMM - (azimut.Size * pxToMM) / 2 + "px",
+            width: azimut.Size * pxToMM + "px",
+            height: azimut.Size * pxToMM + "px",
+        }));
     }, [azimut]);
+
+    //滑鼠移動
+    const handClick = (event) => {
+        var Azimut = {
+            x: (event.nativeEvent.pageX - ClockRef.current.offsetLeft) / pxToMM,
+            y: (event.nativeEvent.pageY - ClockRef.current.offsetTop) / pxToMM,
+        };
+        setAzimut((azimut) => ({
+            ...azimut,
+            Azimut,
+        }));
+    };
 
     //限制移動範圍
     const handleBlur = () => {
@@ -71,12 +71,12 @@ function App() {
     }
 
     //計算角度
-    function calcAngleDegrees(index, x, y) {
+    function calcAngleDegrees(x, y) {
         x = x.toFixed(2) - ChestMaxSize / 2;
         if (y > ChestMaxSize / 2) {
-            y = -Math.abs(azimut[index].Azimut.y.toFixed(2) - ChestMaxSize / 2);
+            y = -Math.abs(azimut.Azimut.y.toFixed(2) - ChestMaxSize / 2);
         } else {
-            y = Math.abs(azimut[index].Azimut.y.toFixed(2) - ChestMaxSize / 2);
+            y = Math.abs(azimut.Azimut.y.toFixed(2) - ChestMaxSize / 2);
         }
         return (Math.atan2(y, x) * 180) / Math.PI;
     }
@@ -112,125 +112,65 @@ function App() {
         }
     }
 
-    //滑鼠右鍵Click
-    function rightClick(event) {
-        console.log("rigth click");
-        event.preventDefault();
-
-        var Azimut = {
-            x: (event.nativeEvent.pageX - ClockRef.current.offsetLeft) / pxToMM,
-            y: (event.nativeEvent.pageY - ClockRef.current.offsetTop) / pxToMM,
-        };
-
-        setAzimut([
-            ...azimut,
-            {
-                Azimut,
-                Size: azimut[onClickCircle].Size,
-            },
-        ]);
-    }
-
-    //滑鼠左鍵Click
-    function leftClick(event) {
-        console.log("left click");
-        var Azimut = {
-            x: (event.nativeEvent.pageX - ClockRef.current.offsetLeft) / pxToMM,
-            y: (event.nativeEvent.pageY - ClockRef.current.offsetTop) / pxToMM,
-        };
-        const tempArray = [...azimut];
-        tempArray[onClickCircle] = {
-            Azimut,
-            Size: azimut[onClickCircle].Size,
-        };
-        setAzimut(tempArray);
-    }
-
-    console.log(azimut);
-    console.log(circleStyle);
-
     return (
         <div className="App">
             <Box width="100%" ref={PageRef}>
                 <Box style={{ margin: "10px 0px 0px 10px" }}>
-                    {azimut.map((item, index) => {
-                        return (
-                            <>
-                                <Typography id="input-slider" gutterBottom>
-                                    第{index + 1}顆，腫瘤大小：
-                                    <Input
-                                        disabled={
-                                            onClickCircle == index
-                                                ? false
-                                                : true
-                                        }
-                                        value={item.Size}
-                                        size="small"
-                                        onChange={(event) => {
-                                            var tempArray = [...azimut];
-                                            tempArray[index].Size =
-                                                event.target.value;
-                                            setAzimut(tempArray);
-                                        }}
-                                        onBlur={handleBlur}
-                                        inputProps={{
-                                            step: 10,
-                                            min: 0,
-                                            max: 100,
-                                            type: "number",
-                                            "aria-labelledby": "input-slider",
-                                        }}
-                                    />
-                                    mm
-                                </Typography>
-                                <Slider
-                                    aria-label="Temperature"
-                                    value={item.Size}
-                                    disabled={
-                                        onClickCircle == index ? false : true
-                                    }
-                                    onChange={(event, value) => {
-                                        var tempArray = [...azimut];
-                                        tempArray[index].Size = value;
-                                        setAzimut(tempArray);
-                                    }}
-                                    valueLabelDisplay="auto"
-                                    step={1}
-                                    marks
-                                    style={{ width: "80%" }}
-                                    min={0}
-                                    max={100}
-                                />
-                            </>
-                        );
-                    })}
-
-                    {azimut.map((azimut, index) => {
-                        <Typography>
-                            方位：
-                            {calculatevHour(
-                                calcAngleDegrees(
-                                    index,
-                                    azimut.Azimut.x,
-                                    azimut.Azimut.y
-                                )
-                            )}
-                            點鐘方向， 距離中心點：
-                            {PythagoreanTheorem(
-                                Math.abs(
-                                    (azimut.Azimut.x / 10 - 10).toFixed(2)
-                                ),
-                                Math.abs((azimut.Azimut.y / 10 - 10).toFixed(2))
-                            ).toFixed(2)}
-                            CM
-                        </Typography>;
-                    })}
+                    <Typography id="input-slider" gutterBottom>
+                        腫瘤大小：
+                        <Input
+                            value={azimut.Size}
+                            size="small"
+                            onChange={(event) => {
+                                setAzimut((azimut) => ({
+                                    ...azimut,
+                                    Size: event.target.value,
+                                }));
+                            }}
+                            onBlur={handleBlur}
+                            inputProps={{
+                                step: 10,
+                                min: 0,
+                                max: 100,
+                                type: "number",
+                                "aria-labelledby": "input-slider",
+                            }}
+                        />
+                        mm
+                    </Typography>
+                    <Slider
+                        aria-label="Temperature"
+                        value={azimut.Size}
+                        onChange={(event, value) => {
+                            setAzimut((azimut) => ({
+                                ...azimut,
+                                Size: value,
+                            }));
+                        }}
+                        valueLabelDisplay="auto"
+                        step={1}
+                        marks
+                        style={{ width: "80%" }}
+                        min={0}
+                        max={100}
+                    />
+                    <Typography>
+                        方位：
+                        {calculatevHour(
+                            calcAngleDegrees(azimut.Azimut.x, azimut.Azimut.y)
+                        )}
+                        點鐘方向， 距離中心點：
+                        {PythagoreanTheorem(
+                            Math.abs((azimut.Azimut.x / 10 - 10).toFixed(2)),
+                            Math.abs((azimut.Azimut.y / 10 - 10).toFixed(2))
+                        ).toFixed(2)}
+                        CM
+                    </Typography>
                 </Box>
 
                 <div
                     id="container"
-                    onClick={leftClick}
-                    onContextMenu={rightClick}
+                    onClick={handClick}
                     ref={ClockRef}
                     style={{
                         width: ChestMaxSize * pxToMM + "px",
@@ -251,16 +191,7 @@ function App() {
                             <Line width={0} angle={item}></Line>
                         );
                     })}
-
-                    {azimut.map((azimut, index) => {
-                        return (
-                            <div
-                                id="circle"
-                                style={circleStyle[onClickCircle]}
-                                onClick={() => setOnClickCircle(index)}
-                            ></div>
-                        );
-                    })}
+                    <div id="circle" style={circleStyle}></div>
                 </div>
             </Box>
         </div>
