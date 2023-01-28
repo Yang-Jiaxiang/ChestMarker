@@ -25,7 +25,7 @@ const Main = ({ side, EditModalOpen, azimut, setAzimut, setOnEditMark }) => {
     const containerStyle = {
         width: ChestMaxSize * pxToMM + "px",
         height: ChestMaxSize * pxToMM + "px",
-        border: "1px solid black",
+        border: "2px solid #f74de9",
         position: "relative",
         borderRadius: "50%",
         left:
