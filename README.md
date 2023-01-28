@@ -3,7 +3,7 @@
 使用左鍵增加腫瘤，左鍵點選腫瘤修改大小、刪除。
 
 ## View
-![React_App_-_個人_-_Microsoft__Edge_2023-01-28_20-42-24_AdobeExpress](https://user-images.githubusercontent.com/81738019/215267624-410f3d61-f131-4e49-ba73-8f5f1524bf86.gif)
+![React_App_-_個人_-_Microsoft__Edge_2023-01-28_20-42-24_AdobeExpress](https://user-images.githubusercontent.com/81738019/215267683-446a0ec6-b766-4098-bdc3-c0f60dd757fe.gif)
 
 
 ## Installation
