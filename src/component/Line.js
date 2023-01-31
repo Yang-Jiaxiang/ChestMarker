@@ -2,7 +2,6 @@ const Line = (props) => {
     const style = {
         position: "absolute",
         border: "1px solid black",
-        textAlign: "center",
         transform: `rotate(${props.angle * 30}deg)`,
         width: props.width + "px",
         top: props.top + "px",

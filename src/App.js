@@ -1,52 +1,43 @@
-import React, { useEffect, useState } from "react";
+import * as React from 'react';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import Modal from '@mui/material/Modal';
 
-import { Box, Grid } from "@mui/material";
+import ChestMarker from "./ChestMarker"
 
-import Main from "./component/Main";
-import MarkEdit from "./component/MarkEdit";
+const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: "80%",
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+};
 
 function App() {
-    const [azimut, setAzimut] = useState({
-        L: [],
-        R: [],
-    });
+    const [open, setOpen] = React.useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
 
-    const [open, setOpen] = useState(false);
-    const EditModalOpen = () => setOpen(true);
-    const EditModalClose = () => setOpen(false);
-    const [onEditMark, setOnEditMark] = useState({ side: "L", index: 0 });
-
-    useEffect(() => {
-        console.log(azimut);
-    }, [azimut]);
     return (
-        <Box sx={{ flexGrow: 1 }}>
-            <Grid container spacing={2}>
-                {["L", "R"].map((side) => {
-                    return (
-                        <Grid item xs={6} md={6} key={side}>
-                            <Main
-                                side={side}
-                                azimut={azimut}
-                                setAzimut={setAzimut}
-                                EditModalOpen={EditModalOpen}
-                                setOnEditMark={setOnEditMark}
-                            />
-                        </Grid>
-                    );
-                })}
-            </Grid>
-            <MarkEdit
-                azimut={azimut}
-                setAzimut={setAzimut}
+        <div>
+            <Button onClick={handleOpen}>Open modal</Button>
+            <Modal
                 open={open}
-                EditModalClose={EditModalClose}
-                EditModalOpen={EditModalOpen}
-                onEditMark={onEditMark}
-                setOnEditMark={setOnEditMark}
-            />
-        </Box>
+                onClose={handleClose}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Box sx={style}>
+                    <ChestMarker />
+                </Box>
+            </Modal>
+        </div>
     );
 }
 
-export default App;
+export default App

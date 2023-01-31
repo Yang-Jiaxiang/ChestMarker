@@ -16,6 +16,10 @@ const Main = ({ side, EditModalOpen, azimut, setAzimut, setOnEditMark }) => {
     const PageRef = useRef(null);
     const ClockRef = useRef(null);
 
+    const [offsetLeft, setOffsetLeft] = useState(0);
+    const [offsetTop, setOffsetTop] = useState(0);
+
+
     useEffect(() => {
         if (PageRef.current) {
             setPxToMM(PageRef.current.offsetWidth / 250);
@@ -35,9 +39,12 @@ const Main = ({ side, EditModalOpen, azimut, setAzimut, setOnEditMark }) => {
     };
 
     const handClick = (event) => {
+        console.log(event.nativeEvent);
+        const x = event.nativeEvent.pageX - ClockRef.current.getBoundingClientRect().x;
+        const y = event.nativeEvent.pageY - ClockRef.current.getBoundingClientRect().y;
         var Azimut = {
-            x: (event.nativeEvent.pageX - ClockRef.current.offsetLeft) / pxToMM,
-            y: (event.nativeEvent.pageY - ClockRef.current.offsetTop) / pxToMM,
+            x: (x) / pxToMM,
+            y: (y) / pxToMM,
         };
         const tempAzimut = azimut[side];
         tempAzimut.push({ Azimut, Size: 10 });
@@ -66,23 +73,24 @@ const Main = ({ side, EditModalOpen, azimut, setAzimut, setOnEditMark }) => {
                     );
                 })}
             </div>
+
             {azimut[side].length > 0
                 ? azimut[side].map((item, index) => {
-                      return (
-                          <Mark
-                              key={index}
-                              side={side}
-                              index={index}
-                              azimut={item}
-                              ClockRef={ClockRef}
-                              pxToMM={pxToMM}
-                              EditModalOpen={EditModalOpen}
-                              setOnEditMark={setOnEditMark}
-                          />
-                      );
-                  })
+                    return (
+                        <Mark
+                            key={index}
+                            side={side}
+                            index={index}
+                            azimut={item}
+                            ClockRef={ClockRef}
+                            pxToMM={pxToMM}
+                            EditModalOpen={EditModalOpen}
+                            setOnEditMark={setOnEditMark}
+                        />
+                    );
+                })
                 : null}
-            <Box style={{ textAlign: "left" }}>
+            {/* <Box style={{ textAlign: "left" }}>
                 <ul>
                     {azimut[side].length > 0
                         ? azimut[side].map((item, index) => {
@@ -90,7 +98,7 @@ const Main = ({ side, EditModalOpen, azimut, setAzimut, setOnEditMark }) => {
                           })
                         : null}
                 </ul>
-            </Box>
+            </Box> */}
         </Box>
     );
 };
